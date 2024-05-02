@@ -18,6 +18,8 @@ appnope==0.1.4
     # via ipython
 asttokens==2.4.1
     # via stack-data
+art==6.2
+    # via lbox-example
 attrs==23.2.0
     # via jsonschema
     # via referencing
