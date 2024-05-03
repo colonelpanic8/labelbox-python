@@ -39,7 +39,6 @@ Repository = "https://github.com/Labelbox/labelbox-python"
 Issues = "https://github.com/Labelbox/labelbox-python/issues"
 Changelog = "https://github.com/Labelbox/labelbox-python/blob/develop/libs/labelbox/CHANGELOG.md"
 
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
