@@ -41,7 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.path-filter.outputs.matrix) }}       
+      matrix: 
+        include: ${{ fromJSON(needs.path-filter.outputs.matrix) }}       
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,5 +60,13 @@ jobs:
         working-directory: libs/${{ matrix.package }}
         run: rye run unit
       - name: Integration
+        concurrency:
+          group: labelbox-python-${{ inputs.test-env }}-${{ inputs.python-version }}
+          cancel-in-progress: false
         working-directory: libs/${{ matrix.package }}
+        env:
+          PYTEST_XDIST_AUTO_NUM_WORKERS: 20
+          LABELBOX_TEST_API_KEY: ${{ secrets[inputs.api-key] }}
+          DA_GCP_LABELBOX_API_KEY: ${{ secrets[inputs.da-test-key] }}
+          LABELBOX_TEST_ENVIRON: ${{ inputs.test-env }}
         run: rye run integration

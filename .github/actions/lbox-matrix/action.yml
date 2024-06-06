@@ -9,5 +9,5 @@ outputs:
   matrix: 
     description: 'Matrix to run lbox packages tests against'
 runs:
-  using: 'node21'
+  using: 'node20'
   main: 'index.js'
