@@ -42,7 +42,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-        include: ${{ fromJSON(needs.path-filter.outputs.matrix) }}       
+        include: ${{ fromJSON(needs.path-filter.outputs.matrix) }}    
+    concurrency:
+      group: labelbox-python-${{ inputs.test-env }}-${{ inputs.python-version }}
+      cancel-in-progress: false   
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,9 +63,6 @@ jobs:
         working-directory: libs/${{ matrix.package }}
         run: rye run unit
       - name: Integration
-        concurrency:
-          group: labelbox-python-${{ inputs.test-env }}-${{ inputs.python-version }}
-          cancel-in-progress: false
         working-directory: libs/${{ matrix.package }}
         env:
           PYTEST_XDIST_AUTO_NUM_WORKERS: 20
