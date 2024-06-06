@@ -14,7 +14,20 @@ permissions:
   id-token: write
 
 jobs:
+  path-filter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            labelbox:
+              - 'libs/labelbox/**'
+      - name: Stop if no changes
+        if: steps.filter.outputs.labelbox != 'true'
+        run: exit 1
   build:
+    needs: ['path-filter']
     strategy:
       fail-fast: false
       matrix:

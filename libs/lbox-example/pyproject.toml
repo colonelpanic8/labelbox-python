@@ -1,7 +1,7 @@
 [project]
 name = "lbox-example"
 version = "0.1.0"
-description = "An example module which can be used to develop other module for labelbox-python"
+description = "An example module which can be used to develop other modules under the lbox namespace"
 authors = [
     { name = "Labelbox", email = "engineering@labelbox.com" }
 ]
