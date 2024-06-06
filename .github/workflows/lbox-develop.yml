@@ -17,38 +17,27 @@ jobs:
   path-filter:
     runs-on: ubuntu-latest
     outputs:
-      lbox-example: ${{ steps.filter.outputs.lbox-example }}
+      lbox: ${{ steps.filter.outputs.lbox }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           list-files: 'json'
           filters: |
-            lbox-example:
-              - 'libs/lbox-example/**'
+            lbox:
+              - 'libs/lbox*/**'
+      - id: matrix
+        uses: ./.github/actions/lbox-matrix
+        with:
+          files-changed: ${{ steps.filter.outputs.lbox_files }}
   build:
     needs: ['path-filter']
-    if: ${{ needs.path-filter.outputs.lbox-example == 'true' }}
+    if: ${{ needs.path-filter.outputs.lbox == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - python-version: 3.8
-            api-key: STAGING_LABELBOX_API_KEY_2
-            da-test-key: DA_GCP_LABELBOX_API_KEY
-          - python-version: 3.9
-            api-key: STAGING_LABELBOX_API_KEY_3
-            da-test-key: DA_GCP_LABELBOX_API_KEY
-          - python-version: "3.10"
-            api-key: STAGING_LABELBOX_API_KEY_4
-            da-test-key: DA_GCP_LABELBOX_API_KEY
-          - python-version: 3.11
-            api-key: STAGING_LABELBOX_API_KEY
-            da-test-key: DA_GCP_LABELBOX_API_KEY
-          - python-version: 3.12
-            api-key: STAGING_LABELBOX_API_KEY_5
-            da-test-key: DA_GCP_LABELBOX_API_KEY
+      matrix: ${{ fromJSON(needs.path-filter.outputs.matrix) }}       
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,12 +48,12 @@ jobs:
           rye-version: ${{ vars.RYE_VERSION }}
           python-version: ${{ matrix.python-version }}
       - name: Format
-        run: rye format --check -v -p lbox-example
+        run: rye format --check -v -p ${{ matrix.package }}
       - name: Linting
-        run: rye lint -v -p lbox-example
+        run: rye lint -v -p ${{ matrix.package }}
       - name: Unit
-        working-directory: libs/lbox-example
+        working-directory: libs/${{ matrix.package }}
         run: rye run unit
       - name: Integration
-        working-directory: libs/lbox-example
-        run: rye run integration --pyproject libs/lbox-example/pyproject.toml
+        working-directory: libs/${{ matrix.package }}
+        run: rye run integration
