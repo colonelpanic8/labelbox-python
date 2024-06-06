@@ -6,8 +6,8 @@ inputs:
     required: true
     default: '[]'
 outputs:
-  time: 
-    matrix: 'Matrix to run lbox packages tests against'
+  matrix: 
+    description: 'Matrix to run lbox packages tests against'
 runs:
   using: 'node20'
   main: 'index.js'
