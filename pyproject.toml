@@ -11,6 +11,22 @@ dependencies = [
 readme = "README.md"
 requires-python = ">= 3.8"
 
+[tool.poetry.dependencies]
+pytest = ">=8.1.1"
+pytest-cases = ">=3.8.4"
+pytest-rerunfailures = ">=14.0"
+pytest-snapshot = ">=0.9.0"
+nbconvert = ">=7.16.2"
+nbformat = ">=5.10.3"
+pytest-cov = ">=4.1.0"
+pytest-xdist = ">=3.5.0"
+toml-cli = ">=0.6.0"
+faker = ">=25.5.0"
+pytest-timestamper = ">=0.0.10"
+pytest-timeout = ">=2.3.1"
+pytest-order = ">=1.2.1"
+
+
 [tool.rye]
 managed = true
 virtual = true
